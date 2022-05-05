@@ -1,0 +1,16 @@
+.tasks{
+    margin: 0;
+    padding: 0;
+    background: #d3d3d3;
+}
+
+.tasks tr{
+    border-color: rgba(69, 69, 69, 0.32);
+}
+.complete{
+    width: 80%;
+}
+
+h3{
+    text-align: center;
+}

@@ -1,0 +1,13 @@
+.tasks{
+    margin: 0;
+    padding: 0;
+    background: rgba(242, 250, 249, 0.6);
+}
+
+.tasks tr{
+    border-color: rgba(69, 69, 69, 0.32);
+}
+
+h3{
+    text-align: center;
+}
