@@ -1,8 +1,26 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import s from './ToDoForm.module.css';
 import {Button, Col, Form, InputGroup, Row, FormControl} from 'react-bootstrap';
+import axios from "axios";
 
-const toDoForm = () => {
+const ToDoForm = () => {
+    const [tasks, setTasks] = useState([]);
+    const apiEndpoint = 'http://localhost:3005/tasks'
+
+    useEffect(()=>{
+        const getTasks = async () => {
+            const {data:res} = await axios.get(apiEndpoint);
+            setTasks(res);
+        };
+        getTasks();
+    }, []);
+
+    const addTask = async () =>{
+        const task = {id: '001', title: 'new'};
+        await axios.post(apiEndpoint,task);
+        setTasks([task,...task]);
+    };
+
     return (
         <div className={s.form}>
             <form className={s.form}>
@@ -59,11 +77,13 @@ const toDoForm = () => {
                 </InputGroup>
 
                 <div>
-                    <Button as={Col} variant="primary">Create Task</Button>
+                    <Button onClick={addTask} as={Col} variant="primary">Create Task</Button>
                 </div>
             </form>
         </div>
     );
 }
 
-export default toDoForm;
+export default ToDoForm;
+
+//https://www.youtube.com/watch?v=O_yUe8qElYM

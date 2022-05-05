@@ -1,0 +1,26 @@
+{
+  "tasks": [
+    {
+      "id": "10",
+      "title": "ToDoList App",
+      "duedate": "08/05/2022",
+      "createddate": "02/05/2022",
+      "assignedto": "Developer",
+      "status": "Under Development",
+      "priority": "Urgent",
+      "category": "Development",
+      "detailedinfo": "React todo application",
+      "summary": "-",
+      "completeddate": "-",
+      "finalstatus:": "-"
+    },
+    {
+      "id": "001",
+      "title": "new"
+    },
+    {
+      "id": "002",
+      "title": "new"
+    }
+  ]
+}

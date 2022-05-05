@@ -1,12 +1,29 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import s from './Tasks.module.css';
 import {Table, ButtonToolbar, ButtonGroup, Button} from "react-bootstrap";
 import {RiDeleteBinLine} from 'react-icons/ri';
 import {GrEdit} from 'react-icons/gr';
 import {MdOutlineDoneOutline} from 'react-icons/md';
 import {InputGroup, FormControl, Container, Row, Col} from "react-bootstrap";
+import axios from "axios";
 
 const Tasks = () => {
+    const [tasks, setTasks] = useState([]);
+    const apiEndpoint = 'http://localhost:3005/tasks';
+
+    useEffect(() => {
+        const getTasks = async () => {
+            const {data: res} = await axios.get(apiEndpoint);
+            setTasks(res);
+        };
+        getTasks();
+    }, []);
+
+    const handleDelete = async (task) => {
+        await axios.delete(apiEndpoint + '/' + task.id + task);
+        setTasks(tasks.filter((t)=>t.id !== task.id));
+    };
+
     return (<div className={s.tasks}>
         <Table striped bordered hover size="sm">
             <thead>
@@ -23,63 +40,27 @@ const Tasks = () => {
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>12</td>
-                <td>Mark Overmars</td>
-                <td>15/05/2022</td>
-                <td>Developer</td>
-                <td>Under Review</td>
-                <td>Important</td>
-                <td>None</td>
-                <td>This task must be completed by the end of this week.</td>
-                <td>
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup className="me-1" aria-label="First group">
-                            <Button variant="success"><MdOutlineDoneOutline/></Button><Button
-                            variant="warning"><GrEdit/></Button> <Button
-                            variant="danger"><RiDeleteBinLine/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </td>
-            </tr>
-            <tr>
-                <td>192</td>
-                <td>Hans Zimmer</td>
-                <td>25/05/2022</td>
-                <td>Tester</td>
-                <td>Under Review</td>
-                <td>Critical</td>
-                <td>None</td>
-                <td>Urgent task!</td>
-                <td>
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup className="me-1" aria-label="First group">
-                            <Button variant="success"><MdOutlineDoneOutline/></Button><Button
-                            variant="warning"><GrEdit/></Button> <Button
-                            variant="danger"><RiDeleteBinLine/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>John Brown</td>
-                <td>30/05/2022</td>
-                <td>Administrator</td>
-                <td>Not Specified</td>
-                <td>Low</td>
-                <td>None</td>
-                <td>Can be completed by the end of month.</td>
-                <td>
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup className="me-1" aria-label="First group">
-                            <Button variant="success"><MdOutlineDoneOutline/></Button><Button
-                            variant="warning"><GrEdit/></Button> <Button
-                            variant="danger"><RiDeleteBinLine/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </td>
-            </tr>
+            {tasks.map(task =>
+                <tr key={task.id}>
+                    <td>{task.id}</td>
+                    <td>{task.title}</td>
+                    <td>{task.duedate}</td>
+                    <td>{task.assignedto}</td>
+                    <td>{task.status}</td>
+                    <td>{task.priority}</td>
+                    <td>{task.category}</td>
+                    <td>{task.detailedinfo}</td>
+                    <td>
+                        <ButtonToolbar aria-label="Toolbar with button groups">
+                            <ButtonGroup className="me-1" aria-label="First group">
+                                <Button variant="success"><MdOutlineDoneOutline/></Button>
+                                <Button variant="warning"><GrEdit/></Button>
+                                <Button onClick={()=> handleDelete(task)} variant="danger"><RiDeleteBinLine/></Button>
+                            </ButtonGroup>
+                        </ButtonToolbar>
+                    </td>
+                </tr>
+            )}
             </tbody>
         </Table>
 
