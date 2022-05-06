@@ -6,6 +6,7 @@ import {GrEdit} from 'react-icons/gr';
 import {MdOutlineDoneOutline} from 'react-icons/md';
 import {InputGroup, FormControl, Container, Row, Col} from "react-bootstrap";
 import axios from "axios";
+import ToDoForm from "./ToDoForm";
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -19,10 +20,16 @@ const Tasks = () => {
         getTasks();
     }, []);
 
-    const handleDelete = async (task) => {
-        await axios.delete(apiEndpoint + '/' + task.id + task);
+    const deleteTask = async (task) => {
+        await axios.delete(apiEndpoint + '/' + task.id);
         setTasks(tasks.filter((t)=>t.id !== task.id));
     };
+
+    const editTask = (e) =>{
+        <ToDoForm title = {e.title}/>
+    };
+
+    const[show, toggleShow] = useState(false);
 
     return (<div className={s.tasks}>
         <Table striped bordered hover size="sm">
@@ -53,9 +60,10 @@ const Tasks = () => {
                     <td>
                         <ButtonToolbar aria-label="Toolbar with button groups">
                             <ButtonGroup className="me-1" aria-label="First group">
-                                <Button variant="success"><MdOutlineDoneOutline/></Button>
-                                <Button variant="warning"><GrEdit/></Button>
-                                <Button onClick={()=> handleDelete(task)} variant="danger"><RiDeleteBinLine/></Button>
+                                <Button onClick={()=> toggleShow(!show)} variant="success">{show ?'Approve':<MdOutlineDoneOutline/>}
+                                </Button>
+                                <Button onClick={()=> editTask(task)} variant="warning"><GrEdit/></Button>
+                                <Button onClick={()=> deleteTask(task)} variant="danger"><RiDeleteBinLine/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                     </td>
@@ -63,8 +71,7 @@ const Tasks = () => {
             )}
             </tbody>
         </Table>
-
-        <Container>
+        {show && <Container>
             <Row className="justify-content-md-center">
                 <Col xs lg="6">
                     <InputGroup className="mb-3">
@@ -79,7 +86,7 @@ const Tasks = () => {
                     <Button variant={"info"}>Complete Task</Button>
                 </Col>
             </Row>
-        </Container>
+        </Container>}
     </div>);
 }
 
