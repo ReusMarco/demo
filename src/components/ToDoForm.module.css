@@ -1,4 +1,10 @@
 .form{
-    background: oldlace;
+    margin-top: 20px;
     padding: 10px;
+}
+
+.input-group-text{
+    padding: 0px;
+    background: red;
+    color: red;
 }

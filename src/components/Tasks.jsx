@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, Fragment, useRef} from "react";
 import s from './Tasks.module.css';
 import {Table, ButtonToolbar, ButtonGroup, Button} from "react-bootstrap";
-import {RiDeleteBinLine} from 'react-icons/ri';
-import {GrEdit} from 'react-icons/gr';
-import {MdOutlineDoneOutline} from 'react-icons/md';
 import {InputGroup, FormControl, Container, Row, Col} from "react-bootstrap";
 import axios from "axios";
-import ToDoForm from "./ToDoForm";
+import ReadTasks from "./ReadTasks";
+import EditTasks from "./EditTasks";
+
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -20,58 +19,60 @@ const Tasks = () => {
         getTasks();
     }, []);
 
-    const deleteTask = async (task) => {
-        await axios.delete(apiEndpoint + '/' + task.id);
-        setTasks(tasks.filter((t)=>t.id !== task.id));
-    };
+    const [editTaskData, setEditTaskDate] = useState({
+        id: "",
+        title: "",
+        duedate: "",
+        createddate: "",
+        assignedto: "",
+        status: "",
+        priority: "",
+        category: "",
+        detailedinfo: "",
+        summary: "",
+        completeddate: "",
+        finalstatus: ""
+    });
 
-    const editTask = (e) =>{
-        <ToDoForm title = {e.title}/>
-    };
+    const [editTask, setEditTask] = useState(null);
 
-    const[show, toggleShow] = useState(false);
+    const handleEditClick = (event, task) => {
+        event.preventDefault();
+        setEditTask(task.id);
+    }
 
     return (<div className={s.tasks}>
-        <Table striped bordered hover size="sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Due Date</th>
-                <th>Assigned</th>
-                <th>Status</th>
-                <th>Priority</th>
-                <th>Category</th>
-                <th>Detailed Info</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {tasks.map(task =>
-                <tr key={task.id}>
-                    <td>{task.id}</td>
-                    <td>{task.title}</td>
-                    <td>{task.duedate}</td>
-                    <td>{task.assignedto}</td>
-                    <td>{task.status}</td>
-                    <td>{task.priority}</td>
-                    <td>{task.category}</td>
-                    <td>{task.detailedinfo}</td>
-                    <td>
-                        <ButtonToolbar aria-label="Toolbar with button groups">
-                            <ButtonGroup className="me-1" aria-label="First group">
-                                <Button onClick={()=> toggleShow(!show)} variant="success">{show ?'Approve':<MdOutlineDoneOutline/>}
-                                </Button>
-                                <Button onClick={()=> editTask(task)} variant="warning"><GrEdit/></Button>
-                                <Button onClick={()=> deleteTask(task)} variant="danger"><RiDeleteBinLine/></Button>
-                            </ButtonGroup>
-                        </ButtonToolbar>
-                    </td>
+        <form>
+            <Table striped bordered hover size="sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Due Date</th>
+                    <th>Event Date</th>
+                    <th>Assigned</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Category</th>
+                    <th>Detailed Info</th>
+                    <th>Actions</th>
                 </tr>
-            )}
-            </tbody>
-        </Table>
-        {show && <Container>
+                </thead>
+                <tbody>
+                {tasks.map((task) =>(
+                    <Fragment>
+                        {
+                            editTask === task.id ?
+                                <EditTasks/>
+                                :
+                                <ReadTasks task={task} handleEditClick = {handleEditClick}/>
+                        }
+                    </Fragment>
+                ))}
+                </tbody>
+            </Table>
+        </form>
+        <Container>
             <Row className="justify-content-md-center">
                 <Col xs lg="6">
                     <InputGroup className="mb-3">
@@ -86,7 +87,7 @@ const Tasks = () => {
                     <Button variant={"info"}>Complete Task</Button>
                 </Col>
             </Row>
-        </Container>}
+        </Container>
     </div>);
 }
 

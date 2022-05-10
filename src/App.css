@@ -1,12 +1,11 @@
 .content{
-  width: 1400px;
-  margin: 100px auto;
-
+  width: 1600px;
+  margin: 50px auto;
 }
 
 .app-wrapper{
   display: grid;
   grid-template-rows: 2fr 1px;
-  grid-template-columns: 4fr 16fr;
+  grid-template-columns: 4fr 18fr;
   grid-gap: 5px;
 }

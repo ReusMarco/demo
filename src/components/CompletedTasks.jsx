@@ -8,7 +8,6 @@ import {InputGroup, FormControl, Container, Row, Col} from "react-bootstrap";
 
 const Tasks = () => {
     return (<div className={s.tasks}>
-        <h3>Completed tasks.</h3>
         <Table striped bordered hover size="sm">
             <thead>
             <tr>
